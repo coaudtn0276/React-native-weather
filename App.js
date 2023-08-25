@@ -3,9 +3,21 @@ import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { View, Text, Dimensions, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { Fontisto } from "@expo/vector-icons";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
 const API_KEY = "2f458731443f7543a8603d34f0424417";
+
+const icons = {
+  Clouds: "cloudy",
+  Clear: "day-sunny",
+  Rain: "rain",
+  Atmosphere: "cloudy-gusts",
+  Snow: "snow",
+  Drizzle: "day-rain",
+  Thunderstorm: "lightning",
+};
 
 export default function App() {
   const [city, setCity] = useState("Loading...");
@@ -45,13 +57,16 @@ export default function App() {
       </View>
       <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} contentContainerStyle={styles.weather}>
         {days.length === 0 ? (
-          <View style={styles.day}>
+          <View style={{ ...styles.day, alignItems: "center" }}>
             <ActivityIndicator style={{ marginTop: 10 }} size="large" />
           </View>
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
-              <Text style={styles.temp}>{parseFloat(day.main.temp).toFixed(1)}</Text>
+              <View style={{ flexDirection: "row", alignItems: "center", width: "100%", justifyContent: "space-between" }}>
+                <Text style={styles.temp}>{parseFloat(day.main.temp).toFixed(1)}</Text>
+                <Fontisto name={icons[day.weather[0].main]} size={50} color={"black"} />
+              </View>
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.tinyText}>{day.weather[0].description}</Text>
             </View>
@@ -74,7 +89,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cityName: {
-    fontSize: 68,
+    fontSize: 58,
     fontWeight: "500",
   },
   weather: {
@@ -84,18 +99,21 @@ const styles = StyleSheet.create({
   day: {
     // flex: 1,
     width: SCREEN_WIDTH,
-    alignItems: "center",
+    alignItems: "flex-start",
+    // marginLeft: 20,
+    paddingLeft: 20,
   },
   temp: {
     marginTop: 50,
     fontWeight: "600",
-    fontSize: 178,
+    fontSize: 128,
   },
   description: {
+    fontWeight: "500",
     marginTop: -30,
-    fontSize: 60,
+    fontSize: 40,
   },
   tinyText: {
-    fontSize: 20,
+    fontSize: 30,
   },
 });
